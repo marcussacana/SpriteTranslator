@@ -16,10 +16,10 @@ namespace SpriteTranslator {
 
         public Encoding Encoding = Encoding.GetEncoding(932);
 
-        public bool Compress = true;        
-        public bool Encrypt = true;
+        public bool Compress = false;        
+        public bool Encrypt = false;
         public bool UpdateModifyDate = true;
-        private bool Corrupted = false;
+        private bool NoUnk14 = true;
         public SpriteListEditor(byte[] Script) {
             this.Script = Script;
             Tools.ReadStruct(Script, ref Header, true, Encoding);
@@ -41,7 +41,7 @@ namespace SpriteTranslator {
             if (Reader.PeekUInt32() == 3557938853) {//English Script from KoiChoco
                 Reader.Seek(0x4C, 0);
                 Header.Unk = 0;
-                Corrupted = true;
+                NoUnk14 = true;
             }
 
             Reader.ReadStruct(ref Content);
@@ -56,7 +56,7 @@ namespace SpriteTranslator {
 
             };
 
-            if (Corrupted && (Encrypt || Compress)) {
+            if (NoUnk14 && (Encrypt || Compress)) {
                 //The English Script of koichoco have a part of the header cutted off, so... 
                 //if you ignore this he corrupt when you encrypt or compress the script
                 throw new Exception("This Script is Corrupted, You can't Export it with Compression or Encryption.");
@@ -82,13 +82,19 @@ namespace SpriteTranslator {
             }
 
 
-            Header.Length = (uint)(Output.LongLength + (Corrupted ? 0x4C : 0x50));
+            Header.Length = (uint)(Output.LongLength + (NoUnk14 ? 0x4C : 0x50));
+
+            if (UpdateModifyDate) {
+                Header.Day = (byte)DateTime.Now.Day;
+                Header.Month = (byte)DateTime.Now.Month;
+                Header.Year = (ushort)DateTime.Now.Year;
+            }
 
             MemoryStream Data = new MemoryStream();
             StructWriter Result = new StructWriter(Data, true, Encoding);
             Result.WriteStruct(ref Header);
 
-            if (Corrupted)
+            if (NoUnk14)
                 Result.Seek(-4, SeekOrigin.Current);
 
             Result.Write(Output, 0, Output.Length);
