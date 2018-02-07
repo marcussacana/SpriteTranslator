@@ -6,9 +6,9 @@ using System.Text;
 namespace SpriteTranslator {
     public class SpriteTL {
 
-        public bool Encrypt { get => Editor.Encrypt; set => Editor.Encrypt = value; }
-        public bool Compress { get => Editor.Compress; set => Editor.Compress = value; }
-        public Encoding Encoding { get => Editor.Encoding; set => Editor.Encoding = value; }
+        public bool Encrypt { get { return Editor.Encrypt; } set { Editor.Encrypt = value; } }
+        public bool Compress { get { return Editor.Compress; } set { Editor.Compress = value; } }
+        public Encoding Encoding { get { return Editor.Encoding; } set { Editor.Encoding = value; } }
         public List<string> BlackList = new List<string>(new string[] { "if", "endif", "true", "false" });
 
         public bool FilterNames = true;

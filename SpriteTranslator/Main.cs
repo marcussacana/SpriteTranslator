@@ -276,11 +276,11 @@ namespace SpriteTranslator {
             public uint Unk;
 
             [Ignore]
-            public bool IsEncrypted { get => isEncrypted != 0; set => isEncrypted = (byte)(value ? 1 : 0); }
+            public bool IsEncrypted { get { return isEncrypted != 0; } set { isEncrypted = (byte)(value ? 1 : 0); } }
             [Ignore]
-            public bool IsBinary { get => isBinary != 0; set => isBinary = (byte)(value ? 1 : 0); }
+            public bool IsBinary { get { return isBinary != 0; } set { isBinary = (byte)(value ? 1 : 0); } }
             [Ignore]
-            public bool IsCompressed { get => isCompressed != 0; set => isCompressed = (byte)(value ? 1 : 0); }
+		public bool IsCompressed { get { return isCompressed != 0; } set { isCompressed = (byte)(value ? 1 : 0); } }
         }
     }
 
